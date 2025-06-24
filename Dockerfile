@@ -9,7 +9,7 @@ RUN apt-get update \
 COPY ./ ./
 RUN go mod download 
 
-RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/...
+RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o sync ./cmd/sync/main.go
 
 FROM gcr.io/distroless/cc-debian12
 
@@ -19,5 +19,5 @@ COPY --from=go-builder /app/main ./
 
 EXPOSE 1323
 USER nonroot:nonroot
-CMD ["./main"]
+CMD ["./sync"]
 

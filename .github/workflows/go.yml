@@ -33,5 +33,5 @@ jobs:
       run: go test -v -timeout 30s ./...
 
     - name: Build
-      run: go build -o main -v ./cmd/...
+      run: go build -o ./sync -v ./cmd/sync/main.go
 
