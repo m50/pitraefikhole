@@ -53,7 +53,6 @@ func (c *Client) Authenticate(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	slog.Debug(string(body))
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, fmt.Sprintf("%s/%s", c.baseAddr, authPath), bytes.NewReader(body))
 	if err != nil {
 		return err
