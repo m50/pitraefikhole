@@ -1,4 +1,4 @@
-package sync
+package main
 
 import "github.com/m50/traefik-pihole/cmd/sync/cmd"
 

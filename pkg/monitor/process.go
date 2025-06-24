@@ -18,18 +18,18 @@ func process(ctx context.Context) {
 	sleepPeriod := viper.GetInt64("poll-frequency-seconds")
 	log := slog.WithContext(ctx)
 	for {
+		log.Debug("sleeping", sleepPeriod, "seconds")
+		time.Sleep(time.Duration(sleepPeriod) * time.Second)
 		log.Debug("Checking for new hosts...")
 		hosts, err := traefikClient.ListHosts(ctx)
 		if err != nil {
-			log.WithError(err).Error("failed to list hosts")
-			time.Sleep(time.Duration(sleepPeriod) * time.Second)
+			log.WithError(err).Error("failed to list hosts", err)
 			continue
 		}
 		log.Debug("Hosts found:", hosts)
 		err = piholeClient.MergeHosts(ctx, hosts)
 		if err != nil {
-			log.WithError(err).Error("failed to merge hosts")
+			log.WithError(err).Error("failed to merge hosts", err)
 		}
-		time.Sleep(time.Duration(sleepPeriod) * time.Second)
 	}
 }

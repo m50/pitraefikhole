@@ -7,6 +7,9 @@ type RouterList []Router
 func (l RouterList) ToHosts() []string {
 	hosts := make([]string, len(l))
 	for i, router := range l {
+		if !router.IsHost() {
+			continue
+		}
 		hosts[i] = router.Host()
 	}
 	return hosts

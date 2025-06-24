@@ -8,14 +8,15 @@ RUN apt-get update \
 COPY ./ ./
 RUN go mod download 
 
-RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o sync ./cmd/sync/main.go
+RUN go build -o main ./cmd/sync/main.go
+RUN chmod +x ./main
 
 FROM gcr.io/distroless/cc-debian12
 
 WORKDIR /app
 
-COPY --from=go-builder /app/sync ./
+COPY --from=go-builder /app/main ./
 
-USER nonroot:nonroot
-CMD ["./sync"]
+USER 1000:1000
+CMD ["./main", "sync"]
 

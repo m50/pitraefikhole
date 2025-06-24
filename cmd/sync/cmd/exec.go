@@ -11,7 +11,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "monitor",
+	Use:   "sync",
 	Short: "",
 	Long:  "",
 	Run:   monitor.Run,
@@ -32,6 +32,7 @@ func init() {
 	flags.String("traefik-address", "http://traefik:8080/", "the address of the traefik instance to watch for routes (default: 'http://traefik:8080/')")
 	flags.Int64("poll-frequency-seconds", 30, "the number of seconds to check between each poll of traefik to look for new hosts (default: 30)")
 	flags.String("log-level", "INFO", "log level (default: 'INFO')")
+	cobra.CheckErr(viper.BindPFlags(flags))
 }
 
 func initConfig() {
@@ -47,6 +48,7 @@ func initConfig() {
 			viper.AddConfigPath(workingDir)
 		}
 		viper.AddConfigPath("/")
+		viper.SetConfigType("yaml")
 		viper.SetConfigName("config.yml")
 	}
 

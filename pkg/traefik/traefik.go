@@ -32,6 +32,8 @@ func NewClient(httpClient HTTPClient) *Client {
 	}
 }
 
+// ListHosts gets a list of all the hosts provided by Traefik.
+// TODO: Add Pagination
 func (c *Client) ListHosts(ctx context.Context) ([]string, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s/%s", c.baseAddr, routersPath), nil)
 	if err != nil {
