@@ -13,16 +13,16 @@ func (l RouterList) ToHosts() []string {
 }
 
 type Router struct {
-	status string
-	rule   string
+	Status string `json:"status"`
+	Rule   string `json:"rule"`
 }
 
 func (r *Router) IsHost() bool {
-	return strings.Contains(r.rule, "Host(") && r.status == "enabled"
+	return strings.Contains(r.Rule, "Host(") && r.Status == "enabled"
 }
 
 func (r *Router) Host() string {
-	h := strings.Replace(r.rule, "Host", "", -1)
+	h := strings.Replace(r.Rule, "Host", "", -1)
 	h = strings.Trim(h, "`()")
 	return h
 }

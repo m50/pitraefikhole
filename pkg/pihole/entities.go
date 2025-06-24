@@ -1,14 +1,14 @@
 package pihole
 
 type Session struct {
-	Valid    bool
-	Validity int
-	SID      string
-	Message  string
+	Valid    bool   `json:"valid"`
+	Validity int    `json:"validity"`
+	SID      string `json:"sid"`
+	Message  string `json:"message"`
 }
 
 type AuthResponse struct {
-	Session Session
+	Session Session `json:"session"`
 }
 
 type DNS struct {
@@ -20,5 +20,5 @@ type Config struct {
 }
 
 type ConfigResponse struct {
-	Config Config
+	Config Config `json:"config"`
 }
