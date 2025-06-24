@@ -3,8 +3,7 @@ FROM golang:1.24.3 AS go-builder
 WORKDIR /app
 
 RUN apt-get update \
-    && apt-get install -y git gcc \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y git gcc
 
 COPY ./ ./
 RUN go mod download 
@@ -15,7 +14,7 @@ FROM gcr.io/distroless/cc-debian12
 
 WORKDIR /app
 
-COPY --from=go-builder /app/main ./
+COPY --from=go-builder /app/sync ./
 
 EXPOSE 1323
 USER nonroot:nonroot
