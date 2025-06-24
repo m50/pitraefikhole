@@ -4,8 +4,10 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
+	"github.com/gookit/slog"
 	"github.com/m50/traefik-pihole/pkg/utils"
 	"github.com/spf13/viper"
 )
@@ -35,19 +37,39 @@ func NewClient(httpClient HTTPClient) *Client {
 // ListHosts gets a list of all the hosts provided by Traefik.
 // TODO: Add Pagination
 func (c *Client) ListHosts(ctx context.Context) ([]string, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s/%s", c.baseAddr, routersPath), nil)
-	if err != nil {
-		return nil, err
-	}
+	var routers RouterList
+	curPage := 1
+	for {
+		resp, err := c.requestRouters(ctx, curPage)
+		if err != nil {
+			return nil, err
+		}
+		pageRouters, err := utils.ReadHttpResponseBody[RouterList](resp)
+		if err != nil {
+			return nil, err
+		}
+		routers = append(routers, *pageRouters...)
 
-	resp, err := c.c.Do(req)
-	if err != nil {
-		return nil, err
+		nextPage := resp.Header.Get("X-Next-Page")
+		slog.Debug("next page:", nextPage)
+		if nextPage == "" || nextPage == strconv.Itoa(curPage) || nextPage == "1" {
+			break
+		}
+		nPage, err := strconv.Atoi(nextPage)
+		if err != nil {
+			slog.WithContext(ctx).Error("failed to fetch next page:", err)
+			break
+		}
+		curPage = nPage
 	}
-	routers, err := utils.ReadHttpResponseBody[RouterList](resp)
-	if err != nil {
-		return nil, err
-	}
-
 	return routers.ToHosts(), nil
+}
+
+func (c *Client) requestRouters(ctx context.Context, page int) (*http.Response, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s/%s?page=%d&per_page=5", c.baseAddr, routersPath, page), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.c.Do(req)
 }
