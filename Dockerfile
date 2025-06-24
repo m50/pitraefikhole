@@ -16,7 +16,6 @@ WORKDIR /app
 
 COPY --from=go-builder /app/sync ./
 
-EXPOSE 1323
 USER nonroot:nonroot
 CMD ["./sync"]
 
