@@ -91,6 +91,10 @@ func (c *Client) MergeHosts(ctx context.Context, hosts []string) error {
 	slog.WithContext(ctx).Debug("found cnames:", cnames)
 	newCNames := []string{}
 	for _, h := range hosts {
+		if h == c.cname {
+			// don't create a cname for the cname addr
+			continue
+		}
 		cname := fmt.Sprintf("%s,%s", h, c.cname)
 		if strings.Trim(h, " \t\n") != "" && !slices.Contains(cnames, cname) {
 			slog.WithContext(ctx).Info("new host found", h)
