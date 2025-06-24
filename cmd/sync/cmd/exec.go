@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/m50/traefik-pihole/pkg/monitor"
+	"github.com/m50/traefik-pihole/pkg/sync"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -14,7 +14,7 @@ var rootCmd = &cobra.Command{
 	Use:   "sync",
 	Short: "",
 	Long:  "",
-	Run:   monitor.Run,
+	Run:   sync.Run,
 }
 
 var (
@@ -59,7 +59,7 @@ func initConfig() {
 
 	ppf := viper.GetString("pihole-password-file")
 	if ppf == "" {
-		return	
+		return
 	}
 	piholePassword, err := os.ReadFile(ppf)
 	if err != nil {
