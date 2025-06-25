@@ -14,6 +14,7 @@ import (
 
 const (
 	routersPath = "api/http/routers"
+	perPage = 20
 )
 
 type HTTPClient interface {
@@ -35,7 +36,6 @@ func NewClient(httpClient HTTPClient) *Client {
 }
 
 // ListHosts gets a list of all the hosts provided by Traefik.
-// TODO: Add Pagination
 func (c *Client) ListHosts(ctx context.Context) ([]string, error) {
 	var routers RouterList
 	curPage := 1
@@ -66,7 +66,7 @@ func (c *Client) ListHosts(ctx context.Context) ([]string, error) {
 }
 
 func (c *Client) requestRouters(ctx context.Context, page int) (*http.Response, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s/%s?page=%d&per_page=5", c.baseAddr, routersPath, page), nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s/%s?page=%d&per_page=%d", c.baseAddr, routersPath, page, perPage), nil)
 	if err != nil {
 		return nil, err
 	}

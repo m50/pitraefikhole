@@ -5,12 +5,12 @@ import "strings"
 type RouterList []Router
 
 func (l RouterList) ToHosts() []string {
-	hosts := make([]string, len(l))
-	for i, router := range l {
+	hosts := make([]string, 0, len(l))
+	for _, router := range l {
 		if !router.IsHost() {
 			continue
 		}
-		hosts[i] = router.Host()
+		hosts = append(hosts, router.Host())
 	}
 	return hosts
 }
