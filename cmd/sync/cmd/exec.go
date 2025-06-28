@@ -36,8 +36,8 @@ func init() {
 }
 
 func initConfig() {
-	viper.SetEnvPrefix("PITRAEFIKHOLE_")
-	viper.SetEnvKeyReplacer(strings.NewReplacer("_", "-"))
+	viper.SetEnvPrefix("PITRAEFIKHOLE")
+	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 	viper.AutomaticEnv()
 
 	if cfgFile != "" {
